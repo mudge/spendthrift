@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html manifest="spendthrift.manifest" lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Spendthrift</title>
+    <link rel="stylesheet" type="text/css" href="st.css">
+    <link rel="apple-touch-icon" href="apple-touch-icon.png">
+    <link rel="apple-touch-startup-image" href="loading.png">
+    <meta name="viewport" content="width=device-width; initial-scale=1.0;">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  </head>
+  <body>
+    <form onsubmit="return addSpend()">
+      <p>
+        &pound;
+        <input type="number" id="amount" placeholder="0.00" size="5">
+        on
+        <input type="text" autosave="descriptions" id="description" placeholder="Lunch" size="10">
+      </p>
+      <p>
+        <input type="submit" value="Add Spend">
+      </p>
+    </form>
+    <table>
+      <caption>Totals</caption>
+      <tbody>
+        <tr><th>This week</th><td>&pound;<span id="weekly_total"></span></td></tr>
+        <tr class="even"><th>This month</th><td>&pound;<span id="monthly_total"></span></td></tr>
+        <tr><th>Grand total</th><td>&pound;<span id="total"></span></td></tr>
+      </tbody>
+    </table>
+    <table>
+      <caption>Breakdowns</caption>
+      <tbody id="breakdowns">
+      </tbody>
+    </table>
+    <script type="text/javascript" src="st.js"></script>
+  </body>
+</html>

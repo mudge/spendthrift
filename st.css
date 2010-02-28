@@ -1,0 +1,52 @@
+* {
+  margin: 0;
+  padding: 0;
+}
+html {
+  background: #fff;
+  color: #000;
+  font: large Helvetica;
+  padding: 20px;
+  text-align: center;
+}
+form {
+  margin-bottom: 20px;
+}
+p {
+  margin-bottom: 10px;
+}
+input {
+  font-size: x-large;
+  -webkit-border-radius: 5px;
+  border: 1px solid #000;
+  padding: 5px;
+}
+input[type=submit] {
+  font-size: large;
+  padding: 5px 10px;
+  background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#eee), to(#999));
+  text-shadow: 1px 1px 2px #fff;
+}
+table {
+  width: 100%;
+  border: 1px solid #666;
+  border-spacing: 0;
+  margin-bottom: 20px;
+}
+th, td {
+  padding: 5px;
+  width: 50%;
+}
+caption {
+  font-style: italic;
+}
+td {
+  text-align: left;
+}
+tbody th {
+  text-align: right;
+  border-right: 1px solid #666;
+}
+tr.even th, tr.even td {
+  background: #eee;
+}
