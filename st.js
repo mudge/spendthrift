@@ -53,22 +53,20 @@ function addSpend() {
   return false;
 }
 
-document.addEventListener("DOMContentLoaded", function() {
-  if (!window.openDatabase) {
-    alert('Spendthrift is not supported by your current browser.');
-  } else {
-    try {
-      var db = openDatabase('spendthrift', '1.0', 'Spendthrift Database', 65536);
-    } catch(e) {
-      alert("Error opening database " + e);
-    }
+if (!window.openDatabase) {
+  alert('Spendthrift is not supported by your current browser.');
+} else {
+  try {
+    var db = openDatabase('spendthrift', '1.0', 'Spendthrift Database', 65536);
+  } catch(e) {
+    alert("Error opening database " + e);
   }
+}
 
-  db.transaction(function(t) {
-    t.executeSql('CREATE TABLE IF NOT EXISTS spends (id INTEGER PRIMARY KEY, amount INTEGER NOT NULL, description NVARCHAR, spent_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP);', [], nullDataHandler, errorHandler);
-  });
+db.transaction(function(t) {
+  t.executeSql('CREATE TABLE IF NOT EXISTS spends (id INTEGER PRIMARY KEY, amount INTEGER NOT NULL, description NVARCHAR, spent_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP);', [], nullDataHandler, errorHandler);
+});
 
-  db.transaction(function(t) {
-    updatePage(t);
-  });
-}, false);
+db.transaction(function(t) {
+  updatePage(t);
+});
