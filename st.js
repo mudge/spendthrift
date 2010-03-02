@@ -67,8 +67,8 @@ function setNumberOfWeeks(transaction, results) {
 
 function updatePage(transaction, results) {
   transaction.executeSql('SELECT SUM(amount) AS total FROM spends', [], updateGrandTotal, errorHandler);
-  transaction.executeSql('SELECT SUM(amount) AS total FROM spends WHERE spent_at > datetime(\'now\', \'-7 days\', \'weekday 1\')', [], updateWeeklyTotal, errorHandler);
-  transaction.executeSql('SELECT SUM(amount) AS total FROM spends WHERE spent_at > datetime(\'now\', \'start of month\')', [], updateMonthlyTotal, errorHandler);
+  transaction.executeSql('SELECT SUM(amount) AS total FROM spends WHERE spent_at > datetime(\'now\', \'-7 days\', \'weekday 1\', \'start of day\')', [], updateWeeklyTotal, errorHandler);
+  transaction.executeSql('SELECT SUM(amount) AS total FROM spends WHERE spent_at > datetime(\'now\', \'start of month\', \'start of day\')', [], updateMonthlyTotal, errorHandler);
   transaction.executeSql('SELECT spent_at, date(spent_at) AS spent_at_date, SUM(amount) AS total FROM spends GROUP BY spent_at_date', [], updateBreakdowns, errorHandler);
   transaction.executeSql('SELECT MIN(spent_at) AS oldest FROM spends', [], setNumberOfWeeks, errorHandler);
   transaction.executeSql('SELECT strftime(\'%w\', spent_at) AS weekday, SUM(amount) AS total FROM spends GROUP BY weekday', [], updateAverages, errorHandler);
