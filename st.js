@@ -60,9 +60,11 @@ function updateAverages(transaction, results) {
 }
 
 function setNumberOfWeeks(transaction, results) {
-  var oldest = new Date(results.rows.item(0)["oldest"]);
+  var oldestValues = results.rows.item(0)["oldest"].split(/\D/);
+  var oldest = new Date(oldestValues[0], oldestValues[1] - 1, oldestValues[2], oldestValues[3], oldestValues[4], oldestValues[5]);
   var distance = new Date() - oldest;
-  numberOfWeeks = Math.ceil(distance / 1000 / 60 / 60 / 24 / 7);
+
+  numberOfWeeks = Math.ceil(((((distance / 1000) / 60) / 60) / 24) / 7);
 }
 
 function updatePage(transaction, results) {
