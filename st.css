@@ -22,13 +22,17 @@ input {
   font-size: x-large;
   -webkit-border-radius: 5px;
   border: 1px solid #000;
-  padding: 5px;
+  padding: 3px 5px;
 }
 input[type=submit] {
   font-size: large;
   padding: 5px 10px;
   background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#ffe), to(#bba));
   text-shadow: 0 1px 0 #fff;
+}
+input[type=submit]:active {
+  background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#998), to(#ddc));
+  text-shadow: 0 1px 0 #ddd;
 }
 table {
   background: rgba(255, 255, 255, 0.2);
