@@ -7,6 +7,8 @@ function errorHandler(transaction, error) {
 function updateGrandTotal(transaction, results) {
   var result = results.rows.item(0)
   document.getElementById('total').textContent = (result['total'] || 0) / 100.0;
+  document.getElementById('daily_average').textContent = ((result['total'] || 0) / 100.0) / numberOfDays;
+  document.getElementById('weekly_average').textContent = ((result['total'] || 0) / 100.0) / numberOfWeeks;
 }
 
 function updateWeeklyTotal(transaction, results) {
@@ -26,6 +28,9 @@ function updateBreakdowns(transaction, results) {
     var result = results.rows.item(i);
     var newBreakdown = document.createElement('tr');
     breakdowns.appendChild(newBreakdown);
+    if (i % 2 == 1) {
+      newBreakdown.className = "even";
+    }
     newBreakdown.innerHTML = '<th>' + result['spent_at_date'] + '</th><td>&pound;' + result['total'] / 100.0 + '</td>';
   }
 }
@@ -59,12 +64,14 @@ function updateAverages(transaction, results) {
   }
 }
 
-function setNumberOfWeeks(transaction, results) {
+function setNumberOfDaysAndWeeks(transaction, results) {
   var oldestValues = results.rows.item(0)["oldest"].split(/\D/);
   var oldest = new Date(oldestValues[0], oldestValues[1] - 1, oldestValues[2], oldestValues[3], oldestValues[4], oldestValues[5]);
   var distance = new Date() - oldest;
 
-  numberOfWeeks = Math.ceil(((((distance / 1000) / 60) / 60) / 24) / 7);
+  /* 1 day = 86,400,000 milliseconds. */
+  numberOfDays = Math.ceil(distance / 86400000);
+  numberOfWeeks = Math.ceil(numberOfDays / 7);
 }
 
 function updatePage(transaction, results) {
@@ -72,7 +79,7 @@ function updatePage(transaction, results) {
   transaction.executeSql('SELECT SUM(amount) AS total FROM spends WHERE spent_at > datetime(\'now\', \'-7 days\', \'weekday 1\', \'start of day\')', [], updateWeeklyTotal, errorHandler);
   transaction.executeSql('SELECT SUM(amount) AS total FROM spends WHERE spent_at > datetime(\'now\', \'start of month\', \'start of day\')', [], updateMonthlyTotal, errorHandler);
   transaction.executeSql('SELECT spent_at, date(spent_at) AS spent_at_date, SUM(amount) AS total FROM spends GROUP BY spent_at_date', [], updateBreakdowns, errorHandler);
-  transaction.executeSql('SELECT MIN(spent_at) AS oldest FROM spends', [], setNumberOfWeeks, errorHandler);
+  transaction.executeSql('SELECT MIN(spent_at) AS oldest FROM spends', [], setNumberOfDaysAndWeeks, errorHandler);
   transaction.executeSql('SELECT strftime(\'%w\', spent_at) AS weekday, SUM(amount) AS total FROM spends GROUP BY weekday', [], updateAverages, errorHandler);
 }
 
@@ -98,6 +105,7 @@ if (!window.openDatabase) {
   try {
     var db = openDatabase('spendthrift', '1.0', 'Spendthrift Database', 65536);
     var numberOfWeeks = 1;
+    var numberOfDays = 1;
   } catch(e) {
     alert("Error opening database " + e);
   }

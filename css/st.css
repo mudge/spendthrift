@@ -3,7 +3,7 @@
   padding: 0;
 }
 html {
-  background: #ffe url(bg.png);
+  background: #ffe url(../images/bg.png);
   color: #000;
   font: large Baskerville, Georgia;
   padding: 20px;
