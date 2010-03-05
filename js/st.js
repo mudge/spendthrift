@@ -1,3 +1,7 @@
+function numberToCurrency(number) {
+  return Math.round(number * 100) / 100;
+}
+
 function nullDataHandler(transaction, results) {}
 function errorHandler(transaction, error) {
   alert("There was an error (code " + error.code + "): " + error.message);
@@ -6,19 +10,19 @@ function errorHandler(transaction, error) {
 
 function updateGrandTotal(transaction, results) {
   var result = results.rows.item(0)
-  document.getElementById('total').textContent = (result['total'] || 0) / 100.0;
-  document.getElementById('daily_average').textContent = ((result['total'] || 0) / 100.0) / numberOfDays;
-  document.getElementById('weekly_average').textContent = ((result['total'] || 0) / 100.0) / numberOfWeeks;
+  document.getElementById('total').textContent = numberToCurrency((result['total'] || 0) / 100.0);
+  document.getElementById('daily_average').textContent = numberToCurrency(((result['total'] || 0) / 100.0) / numberOfDays);
+  document.getElementById('weekly_average').textContent = numberToCurrency(((result['total'] || 0) / 100.0) / numberOfWeeks);
 }
 
 function updateWeeklyTotal(transaction, results) {
   var result = results.rows.item(0)
-  document.getElementById('weekly_total').textContent = (result['total'] || 0) / 100.0;
+  document.getElementById('weekly_total').textContent = numberToCurrency((result['total'] || 0) / 100.0);
 }
 
 function updateMonthlyTotal(transaction, results) {
   var result = results.rows.item(0)
-  document.getElementById('monthly_total').textContent = (result['total'] || 0) / 100.0;
+  document.getElementById('monthly_total').textContent = numberToCurrency((result['total'] || 0) / 100.0);
 }
 
 function updateBreakdowns(transaction, results) {
@@ -31,7 +35,7 @@ function updateBreakdowns(transaction, results) {
     if (i % 2 == 1) {
       newBreakdown.className = "even";
     }
-    newBreakdown.innerHTML = '<th>' + result['spent_at_date'] + '</th><td>&pound;' + result['total'] / 100.0 + '</td>';
+    newBreakdown.innerHTML = '<th>' + result['spent_at_date'] + '</th><td>&pound;' + numberToCurrency(result['total'] / 100.0) + '</td>';
   }
 }
 
@@ -40,25 +44,25 @@ function updateAverages(transaction, results) {
     var result = results.rows.item(i);
     switch(result["weekday"]) {
       case "0":
-        document.getElementById('sunday').textContent = (result["total"] / 100.0) / numberOfWeeks;
+        document.getElementById('sunday').textContent = numberToCurrency((result["total"] / 100.0) / numberOfWeeks);
         break;
       case "1":
-        document.getElementById('monday').textContent = (result["total"] / 100.0) / numberOfWeeks;
+        document.getElementById('monday').textContent = numberToCurrency((result["total"] / 100.0) / numberOfWeeks);
         break;
       case "2":
-        document.getElementById('tuesday').textContent = (result["total"] / 100.0) / numberOfWeeks;
+        document.getElementById('tuesday').textContent = numberToCurrency((result["total"] / 100.0) / numberOfWeeks);
         break;
       case "3":
-        document.getElementById('wednesday').textContent = (result["total"] / 100.0) / numberOfWeeks;
+        document.getElementById('wednesday').textContent = numberToCurrency((result["total"] / 100.0) / numberOfWeeks);
         break;
       case "4":
-        document.getElementById('thursday').textContent = (result["total"] / 100.0) / numberOfWeeks;
+        document.getElementById('thursday').textContent = numberToCurrency((result["total"] / 100.0) / numberOfWeeks);
         break;
       case "5":
-        document.getElementById('friday').textContent = (result["total"] / 100.0) / numberOfWeeks;
+        document.getElementById('friday').textContent = numberToCurrency((result["total"] / 100.0) / numberOfWeeks);
         break;
       case "6":
-        document.getElementById('saturday').textContent = (result["total"] / 100.0) / numberOfWeeks;
+        document.getElementById('saturday').textContent = numberToCurrency((result["total"] / 100.0) / numberOfWeeks);
         break;
     }
   }
