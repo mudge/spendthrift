@@ -68,6 +68,20 @@ function updateAverages(transaction, results) {
   }
 }
 
+function export() {
+  var mailto = "mailto:?body=INSERT INTO SPENDS (id, amount, description, spent_at) VALUES "
+  db.transaction(function(t) {
+    t.executeSql('SELECT * FROM spends', [], function(transaction, results) {
+      for (var i = 0; i < results.rows.length; i++) {
+        var result = results.rows.item(i);
+        mailto = mailto + "(" + result["id"] + ", " + result["amount"] + ", '" + result["description"] + "', '" + result["spent_at"] + "')";
+      }
+      window.location = mailto;
+    }, errorHandler);
+  });
+  return false;
+}
+
 function setNumberOfDaysAndWeeks(transaction, results) {
   var oldestValues = results.rows.item(0)["oldest"].split(/\D/);
   var oldest = new Date(oldestValues[0], oldestValues[1] - 1, oldestValues[2], oldestValues[3], oldestValues[4], oldestValues[5]);
