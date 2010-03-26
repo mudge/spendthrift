@@ -69,13 +69,18 @@ function updateAverages(transaction, results) {
 }
 
 function exportSpends() {
-  var mailto = "mailto:?subject=Spendthrift Export&body=INSERT INTO SPENDS (id, amount, description, spent_at) VALUES ";
+  var mailto = "mailto:?subject=Spendthrift Export&body=[";
   db.transaction(function(t) {
     t.executeSql('SELECT * FROM spends', [], function(transaction, results) {
-      for (var i = 0; i < results.rows.length; i++) {
+      var length = results.rows.length;
+      for (var i = 0; i < length; i++) {
         var result = results.rows.item(i);
-        mailto = mailto + "(" + result["id"] + ", " + result["amount"] + ", '" + result["description"] + "', '" + result["spent_at"] + "')";
+        mailto = mailto + JSON.stringify(result);
+        if (i != length - 1) {
+          mailto = mailto + ",";
+        }
       }
+      mailto = mailto + "]";
       window.location = mailto;
     }, errorHandler);
   });
