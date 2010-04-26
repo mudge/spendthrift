@@ -1,5 +1,8 @@
-function numberToCurrency(number) {
-  return Math.round(number * 100) / 100;
+function numberToCurrency(number, precision) {
+  if (!precision) {
+    precision = 2
+  }
+  return Math.round(number * Math.pow(10, precision)) / Math.pow(10, precision);
 }
 
 function nullDataHandler(transaction, results) {}
@@ -23,6 +26,14 @@ function updateWeeklyTotal(transaction, results) {
 function updateMonthlyTotal(transaction, results) {
   var result = results.rows.item(0)
   document.getElementById('monthly_total').textContent = numberToCurrency((result['total'] || 0) / 100.0);
+}
+
+function updateLastMonthTotal(transaction, results) {
+  var result = results.rows.item(0)
+  document.getElementById('last_month').textContent = numberToCurrency((result['total'] || 0) / 100.0);
+
+  var month_delta = parseFloat(document.getElementById('last_month').textContent) - parseFloat(document.getElementById('monthly_total').textContent);
+  document.getElementById('month_delta').textContent = numberToCurrency(month_delta);
 }
 
 function updateBreakdowns(transaction, results) {
@@ -103,6 +114,7 @@ function updatePage(transaction, results) {
   transaction.executeSql('SELECT SUM(amount) AS total FROM spends', [], updateGrandTotal, errorHandler);
   transaction.executeSql('SELECT SUM(amount) AS total FROM spends WHERE spent_at > datetime(\'now\', \'-7 days\', \'weekday 1\', \'start of day\')', [], updateWeeklyTotal, errorHandler);
   transaction.executeSql('SELECT SUM(amount) AS total FROM spends WHERE spent_at > datetime(\'now\', \'start of month\', \'start of day\')', [], updateMonthlyTotal, errorHandler);
+  transaction.executeSql('SELECT SUM(amount) AS total FROM spends WHERE spent_at > datetime(\'now\', \'-1 month\', \'start of month\', \'start of day\') AND spent_at < datetime(\'now\', \'start of month\', \'start of day\')', [], updateLastMonthTotal, errorHandler);
   transaction.executeSql('SELECT spent_at, date(spent_at) AS spent_at_date, SUM(amount) AS total FROM spends GROUP BY spent_at_date', [], updateBreakdowns, errorHandler);
   transaction.executeSql('SELECT strftime(\'%w\', spent_at) AS weekday, SUM(amount) AS total FROM spends GROUP BY weekday', [], updateAverages, errorHandler);
 }
